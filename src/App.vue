@@ -4,7 +4,7 @@ import TodoApp from "./components/TodoApp.vue";
 
 <template>
   <div>
-    <TodoApp ></TodoApp>
+    <TodoApp />
   </div>
 </template>
 

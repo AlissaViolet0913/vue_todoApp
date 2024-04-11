@@ -4,9 +4,17 @@ import { ref } from "vue";
 
 const input = ref("");
 const inputDate = ref("");
+const isErrMsg = ref(false);
 
 function onSubmitForm(e){
     e.preventDefault();
+
+    // 入力が無い場合にはエラーメッセージを表示して処理を終了させる
+    if(input.value=="" || inputDate.value==""){
+        isErrMsg.value = true;
+        return;
+    }
+
     // ローカルストレージからデータ取得
     // JSON.parseでJSON形式から配列で扱えるように変換
     const items = JSON.parse(localStorage.getItem("items")) || [];
@@ -33,6 +41,7 @@ function onSubmitForm(e){
 
 <template>
     <div>
+        <p v-if="isErrMsg" class="errMsg">タスク・期限を両方入力してください。</p>
         <form @submit="onSubmitForm">
             <label for="todo">やること<input type="text" name="todo" id="todo" v-model="input"/></label>
             <label for="date">期限<input type="date" name="date" id="date" v-model="inputDate"/></label>
@@ -40,3 +49,9 @@ function onSubmitForm(e){
         </form>
     </div>
 </template>
+
+<style>
+.errMsg{
+    color: red;
+}
+</style>
