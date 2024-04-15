@@ -103,6 +103,20 @@ function onHideModal(){
     isShowModal.value = false;
 }
 
+/**
+ * 期限を昇順に変更「⇓」
+ * ※ID順に戻せるようにIDはふり直さないでそのままにしておく
+ */
+function sortByLimit(){
+    items.value.sort((a,b)=> new Date(a.limit) - new Date(b.limit));
+    localStorage.setItem("items", JSON.stringify(items.value));
+}
+
+// IDで昇順に変更「⇓」
+function sortById(){
+    items.value.sort((a,b) => a.id - b.id);
+    localStorage.setItem("items", JSON.stringify(items.value));
+}
 
 
 </script>
@@ -111,9 +125,10 @@ function onHideModal(){
     <p v-if="isErrMsg" class="errMsg">{{ errMsg }}</p>
     <table>
         <tr>
-            <th class="th-id">ID</th>
+            <th class="th-id">ID<button @click="sortById()">⇓</button>
+            </th>
             <th class="th-value">やること</th>
-            <th class="th-limit">期限</th>
+            <th class="th-limit">期限<button @click="sortByLimit()">⇓</button></th>
             <th class="th-state">状態</th>
             <th class="th-edit">編集</th>
             <th class="th-delete">削除</th>
