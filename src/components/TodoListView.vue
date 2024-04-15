@@ -14,8 +14,8 @@ let isErrMsg = ref(false);
 let isShowModal = ref(false);
 
 // 編集
+// 初期値変数にそれぞれ今の値を代入
 function onEdit(id){
-    // 初期値変数にそれぞれ今の値を代入
     inputContent.value = items.value[id].content;
     inputLimit.value = items.value[id].limit;
     inputState.value = items.value[id].state;
@@ -45,6 +45,45 @@ localStorage.setItem("items", JSON.stringify(items.value));
 isErrMsg.value = false;
 
 }
+
+let deleteItemId = '';
+let deleteItemContent = ref();
+
+// 削除(モーダルウィンドウ表示)
+function showDeleteModal(id){
+    isShowModal.value = true;
+    deleteItemId = id;
+    deleteItemContent = items.value[id].content;
+}
+
+
+// はい（モーダルウィンドウ）
+function onDeleteItem(){
+    items.value.splice(deleteItemId, 1); //対象のタスクを削除
+    isShowModal.value = false;
+
+    // IDを振り直す
+    items.value = items.value.map((item, index) => ({
+        id: index,
+        content: item.content,
+        limit: item.limit,
+        state: item.state,
+        onEdit: item.onEdit,
+    }))
+    localStorage.setItem("items", JSON,stringify(items.value));
+    /**
+     * このあとに isShowModal.value = false;を書いてはいけない理由
+     * ⇒localStorageはブラウザに保存のため、ページをリロードした後に反映される
+     * ⇒falseにする前にリロードが走って実行されない
+     *  */ 
+
+}
+
+// キャンセル（モーダルウィンドウ）
+function onHideModal(){
+    isShowModal.value = false;
+}
+
 
 
 </script>
@@ -90,17 +129,37 @@ isErrMsg.value = false;
                 <button v-if="!item.onEdit" @click="onEdit(item.id)">編集</button>
                 <button v-else @click="onUpdate(item.id)">完了</button>
             </td>
-            <td><button>削除</button></td>
+            <td><button @click="showDeleteModal(item.id)">削除</button></td>
         </tr>
     </table>
 
     <!-- 削除時に表示するモーダルウィンドウ -->
     <div v-if="isShowModal" class="modal">
         <div class="modal-content">
-            <p>削除してもよろしいですか？</p>
-            <button>はい</button>
-            <button>キャンセル</button>
+            <p>{{ deleteItemContent }}を削除してもよろしいですか？</p>
+            <button @click="onDeleteItem()">はい</button>
+            <button @click="onHideModal()">キャンセル</button>
         </div>
 
     </div>
 </template>
+
+<style>
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+</style>
