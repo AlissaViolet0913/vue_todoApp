@@ -49,9 +49,3 @@ function onSubmitForm(e){
         </form>
     </div>
 </template>
-
-<style>
-.errMsg{
-    color: red;
-}
-</style>
