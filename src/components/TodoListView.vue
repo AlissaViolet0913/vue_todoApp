@@ -12,10 +12,27 @@ let inputLimit = ref("");
 let inputState = ref("");
 let isErrMsg = ref(false);
 let isShowModal = ref(false);
+let errMsg = ref("");
+let isOnEditOther = false;
 
 // 編集
 // 初期値変数にそれぞれ今の値を代入
 function onEdit(id){
+
+    // 他に編集モードのタスクがないか調べる
+    items.value.map((item) => {
+        if(item.onEdit){
+            isOnEditOther = true;
+            return;
+        }
+    });
+
+    if(isOnEditOther){
+        errMsg.value = "他に編集中のタスクがあります。";
+        isErrMsg.value = true;
+        return;
+    }
+
     inputContent.value = items.value[id].content;
     inputLimit.value = items.value[id].limit;
     inputState.value = items.value[id].state;
@@ -35,6 +52,7 @@ const newItem = {
 
 // 入力が空だったらisErrMsgをtrueにする
 if(inputContent.value == "" || inputLimit.value == ""){
+    errMsg.value = "タスク・期限を両方入力してください。";
     isErrMsg.value = true;
     return;
 }
@@ -89,6 +107,7 @@ function onHideModal(){
 </script>
 
 <template>
+    <p v-if="isErrMsg" class="errMsg">{{ errMsg }}</p>
     <table>
         <tr>
             <th class="th-id">ID</th>
@@ -98,7 +117,6 @@ function onHideModal(){
             <th class="th-edit">編集</th>
             <th class="th-delete">削除</th>
         </tr>
-        <p v-if="isErrMsg" class="errMsg">タスク・期限を両方入力してください。</p>
         <tr v-for="item in items" :key="item.id">
             <td>{{ item.id }}</td>
             <td>
