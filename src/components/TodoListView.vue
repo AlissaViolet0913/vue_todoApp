@@ -11,6 +11,7 @@ let inputContent = ref("");
 let inputLimit = ref("");
 let inputState = ref("");
 let isErrMsg = ref(false);
+let isShowModal = ref(false);
 
 // 編集
 function onEdit(id){
@@ -44,6 +45,7 @@ localStorage.setItem("items", JSON.stringify(items.value));
 isErrMsg.value = false;
 
 }
+
 
 </script>
 
@@ -91,4 +93,14 @@ isErrMsg.value = false;
             <td><button>削除</button></td>
         </tr>
     </table>
+
+    <!-- 削除時に表示するモーダルウィンドウ -->
+    <div v-if="isShowModal" class="modal">
+        <div class="modal-content">
+            <p>削除してもよろしいですか？</p>
+            <button>はい</button>
+            <button>キャンセル</button>
+        </div>
+
+    </div>
 </template>
