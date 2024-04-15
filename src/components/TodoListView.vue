@@ -14,6 +14,7 @@ let isErrMsg = ref(false);
 let isShowModal = ref(false);
 let errMsg = ref("");
 let isOnEditOther = false;
+const today = new Date();
 
 // 編集
 // 初期値変数にそれぞれ今の値を代入
@@ -117,7 +118,13 @@ function onHideModal(){
             <th class="th-edit">編集</th>
             <th class="th-delete">削除</th>
         </tr>
-        <tr v-for="item in items" :key="item.id">
+    
+    <!-- :class: newDate(item.limit) < todayがtrueならredというクラスを付与する -->
+        <tr 
+        v-for="item in items" 
+        :key="item.id"
+        :class="{ red: new Date(item.limit) < today}"
+        >
             <td>{{ item.id }}</td>
             <td>
                 <!-- onEditがfalseならタスク表示、trueなら入力欄を表示 -->
@@ -179,5 +186,9 @@ function onHideModal(){
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
+}
+
+.red{
+    color: red;
 }
 </style>
