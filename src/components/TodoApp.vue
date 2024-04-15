@@ -9,3 +9,9 @@ import TodoListView from './TodoListView.vue';
         <TodoListView />
     </div>
 </template>
+
+<style>
+.errMsg{
+    color: red;
+}
+</style>
